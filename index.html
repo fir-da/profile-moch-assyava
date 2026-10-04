@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link in Bio - Assyava</title>
+    
+    <!-- Memanggil file CSS yang terpisah -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Tambahkan tautan CDN Font Awesome untuk icon yang lebih profesional -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* CSS Tambahan untuk Icon agar lebih sedap dipandang */
+        .btn-link i {
+            margin-right: 8px; /* Atur spasi antara icon dan teks */
+            font-size: 1.1em; /* Sedikit lebih besar untuk penekanan */
+            vertical-align: middle; /* Pastikan rata secara vertikal dengan teks */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="carousel-container" id="cardCarousel">
+        
+        <!-- KARTU 1: Perkenalan -->
+        <div class="card" data-pos="center">
+            <!-- Ganti 'foto-profil.jpg' dengan nama file foto wajah Anda -->
+            <img src="h.png" alt="Foto Profil" class="profile-img">
+            <h2 class="title">Halo, saya Assyava! 👋</h2>
+            <p class="subtitle">Sehari-hari akrab dengan manajemen dan administrasi, tapi punya hobi ngoding web dan ngulik mikrokontroler.</p>
+            <p class="hint">Geser atau ketuk kartu di samping</p>
+        </div>
+
+        <!-- KARTU 2: Sosmed & Web CV -->
+        <div class="card" data-pos="right">
+            <h2 class="title" style="margin-top: 10px;">Mari berteman lebih dekat!</h2>
+            <div class="links-container">
+
+                <!-- Ganti emoji dengan icon Font Awesome -->
+                <a href="https://www.instagram.com/moch_assyava/" class="btn-link btn-outline"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://web.facebook.com/moch.s.firdaus.56" class="btn-link btn-outline"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="https://www.tiktok.com/@moch_assyava?_r=1&_t=ZS-9AHAMn0eiLi" class="btn-link btn-outline"><i class="fab fa-tiktok"></i> TikTok</a>
+                <a href="https://fir-da.github.io/cv-moch-assyava-af/" class="btn-link btn-primary"><i class="fas fa-globe"></i> Kunjungi Web CV Saya</a>
+            </div>
+            <p class="hint">Geser atau ketuk kartu di samping</p>
+        </div>
+
+        <!-- KARTU 3: Kontak Langsung -->
+        <div class="card" data-pos="left">
+            <h2 class="title" style="margin-top: 10px; font-size: 1.1rem;">Atau mau langsung ngobrol proyek dan kerjaan?</h2>
+            <div class="links-container">
+                
+                <!-- Ganti emoji dengan icon Font Awesome -->
+                <a href="https://wa.me/6289686903350" class="btn-link btn-outline"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="https://id.linkedin.com/in/mochammad-assyava-aulia-firdaus-08706b310I" class="btn-link btn-outline"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="mailto:mochassyava@gmail.com" class="btn-link btn-outline"><i class="fas fa-envelope"></i> Email</a>
+            </div>
+            <p class="hint">Geser atau ketuk kartu di samping</p>
+        </div>
+
+    </div>
+
+    <!-- JavaScript untuk interaksi klik dan geser -->
+    <script>
+        const cards = Array.from(document.querySelectorAll('.card'));
+        let positions = ['center', 'right', 'left'];
+
+        function updateCards() {
+            cards.forEach((card, index) => {
+                card.setAttribute('data-pos', positions[index]);
+            });
+        }
+
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const currentPos = card.getAttribute('data-pos');
+                
+                if (currentPos === 'center') return;
+                
+                if (currentPos === 'right') {
+                    positions.unshift(positions.pop());
+                } else if (currentPos === 'left') {
+                    positions.push(positions.shift());
+                }
+                
+                updateCards();
+            });
+        });
+    </script>
+
+</body>
+</html>

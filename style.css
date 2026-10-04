@@ -1,0 +1,193 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- ANIMASI LATAR BELAKANG ELEGAN --- */
+@keyframes gerakBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden; 
+    
+    /* Gradasi bergerak dari hitam ke sedikit nuansa emas gelap */
+    background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #2a2215, #0a0a0a);
+    background-size: 400% 400%;
+    animation: gerakBackground 15s ease infinite; /* Durasi 15 detik agar elegan dan lambat */
+}
+
+.carousel-container {
+    position: relative;
+    width: 100vw;
+    max-width: 500px;
+    height: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- DESAIN KARTU PURE CSS (Tanpa Gambar) --- */
+.card {
+    position: absolute;
+    width: 280px;
+    height: 440px;
+    
+    /* Warna dasar dan efek pencahayaan 3D */
+    background-color: #222222;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.6) 100%);
+    
+    border-radius: 16px; 
+    padding: 30px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    user-select: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Garis batas luar yang sangat tipis */
+    border: 1px solid #333;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Membuat Bingkai Garis Emas di Dalam Kartu (Menggantikan h_2.png) */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    border: 1px solid rgba(201, 162, 85, 0.6); /* Warna emas sedikit transparan */
+    border-radius: 10px;
+    pointer-events: none; /* Agar tidak mengganggu saat kartu diklik */
+    z-index: 0;
+}
+
+/* Memastikan konten (teks, foto, tombol) berada di atas bingkai emas */
+.card > * {
+    z-index: 1;
+    position: relative;
+}
+
+/* --- KONDISI POSISI KARTU --- */
+.card[data-pos="center"] {
+    transform: translateX(0) scale(1);
+    z-index: 3;
+    opacity: 1;
+    cursor: default;
+    /* Kartu tengah mendapatkan efek cahaya (glow) emas yang sangat halus */
+    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.1), 
+                0 25px 45px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(201, 162, 85, 0.1);
+}
+
+.card[data-pos="left"] {
+    transform: translateX(-110px) scale(0.85);
+    z-index: 1;
+    opacity: 0.5; 
+    cursor: pointer;
+}
+
+.card[data-pos="right"] {
+    transform: translateX(110px) scale(0.85);
+    z-index: 1;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.card:not([data-pos="center"]) a {
+    pointer-events: none;
+}
+
+/* --- STYLING KONTEN --- */
+.profile-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 2px solid #c9a255; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+}
+
+.title {
+    font-size: 1.25rem;
+    color: #c9a255; 
+    margin-bottom: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: #dfdfdf; 
+    line-height: 1.5;
+    margin-bottom: auto;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: #888888;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.links-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.btn-link {
+    display: block;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px; 
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+.btn-outline {
+    background: rgba(255, 255, 255, 0.05); 
+    color: #c9a255;
+    border: 1px solid #c9a255;
+    backdrop-filter: blur(4px);
+}
+
+.btn-outline:hover {
+    background: #c9a255;
+    color: #121212; 
+    box-shadow: 0 0 15px rgba(201, 162, 85, 0.3);
+    transform: translateY(-2px); 
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #e3b868, #c9a255); 
+    color: #121212; 
+    border: none;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #f3cf85, #d9b265); 
+    box-shadow: 0 0 20px rgba(201, 162, 85, 0.5);
+    transform: translateY(-2px) scale(1.02);
+}
