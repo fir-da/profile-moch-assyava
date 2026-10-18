@@ -261,7 +261,7 @@
            7. EFEK 3D INTERAKTIF (PERBAIKAN STICKY HOVER)
            ========================================= */
         
-        /* State 1: Hanya berlakukan :hover pada PC (Perangkat yang menggunakan mouse) */
+        /* Hanya berlakukan :hover otomatis pada PC */
         @media (hover: hover) and (pointer: fine) {
             #kartu-profil[data-pos="center"]:hover {
                 transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
@@ -278,18 +278,18 @@
             }
         }
 
-        /* State 2: Berlaku untuk Klik di PC & Tap-Tahan (Active) di HP */
-        #kartu-profil[data-pos="center"]:active {
+        /* Class khusus untuk mendeteksi sentuhan jari via JS (Bebas Stuck) */
+        #kartu-profil[data-pos="center"].is-tapped {
             transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 25px rgba(201, 162, 85, 0.2);
         }
-        #kartu-profil[data-pos="center"]:active .profile-img {
+        #kartu-profil[data-pos="center"].is-tapped .profile-img {
             transform: translateZ(60px) scale(1.15) translateY(-10px);
         }
-        #kartu-profil[data-pos="center"]:active .title {
+        #kartu-profil[data-pos="center"].is-tapped .title {
             transform: translateZ(40px);
         }
-        #kartu-profil[data-pos="center"]:active .subtitle {
+        #kartu-profil[data-pos="center"].is-tapped .subtitle {
             transform: translateZ(25px);
         }
 
@@ -297,54 +297,17 @@
            8. RESPONSIVE MOBILE
            ========================================= */
         @media (max-width: 480px) {
-            .carousel-container {
-                height: 440px; 
-            }
-
-            .card {
-                width: 260px; 
-                height: 420px;
-                padding: 25px 20px;
-            }
-
-            .profile-container {
-                width: 130px; 
-                height: 150px;
-                margin: 10px auto 15px auto;
-            }
-
-            .title {
-                font-size: 1.15rem;
-            }
-
-            .subtitle {
-                font-size: 0.8rem;
-            }
-
-            .card[data-pos="left"] {
-                transform: translateX(-70px) scale(0.85) rotate(-10deg); 
-            }
-
-            .card[data-pos="right"] {
-                transform: translateX(70px) scale(0.85) rotate(10deg); 
-            }
-
-            .btn-link {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
-
-            .bg-aurora::before, .bg-aurora::after {
-                width: 120vw; 
-                height: 60vh;
-                filter: blur(70px); 
-            }
-
-            .bg-aurora::before {
-                top: -5%;
-                left: -20%;
-            }
-
+            .carousel-container { height: 440px; }
+            .card { width: 260px; height: 420px; padding: 25px 20px; }
+            .profile-container { width: 130px; height: 150px; margin: 10px auto 15px auto; }
+            .title { font-size: 1.15rem; }
+            .subtitle { font-size: 0.8rem; }
+            .card[data-pos="left"] { transform: translateX(-70px) scale(0.85) rotate(-10deg); }
+            .card[data-pos="right"] { transform: translateX(70px) scale(0.85) rotate(10deg); }
+            .btn-link { padding: 10px; font-size: 0.9rem; }
+            
+            .bg-aurora::before, .bg-aurora::after { width: 120vw; height: 60vh; filter: blur(70px); }
+            .bg-aurora::before { top: -5%; left: -20%; }
             .bg-aurora::after {
                 background: rgba(25, 60, 100, 0.45); 
                 bottom: 5%; 
@@ -360,11 +323,9 @@
     <div class="carousel-container" id="cardCarousel">
         
         <div class="card" id="kartu-profil" data-pos="center">
-            
             <div class="profile-container">
                 <img src="h.png" alt="Foto Profil" class="profile-img">
             </div>
-
             <h2 class="title">Halo, saya Assyava! 👋</h2>
             <p class="subtitle">Management graduates | Tech Enthusiast | Stock Enthusiast | Graphic Design Lover</p>
             <p class="subtitle" style="margin-top: 5px;">Antusias belajar hal baru tiap harinya!</p>
@@ -397,12 +358,14 @@
     <script>
         const cards = Array.from(document.querySelectorAll('.card'));
         const container = document.getElementById('cardCarousel');
+        const kartuProfil = document.getElementById('kartu-profil');
         let pos = ['center', 'right', 'left'];
 
         const updateCards = () => cards.forEach((c, i) => c.setAttribute('data-pos', pos[i]));
         const shiftRight = () => { pos.unshift(pos.pop()); updateCards(); }
         const shiftLeft = () => { pos.push(pos.shift()); updateCards(); }
 
+        // Fungsi klik untuk geser kartu
         cards.forEach(card => {
             card.addEventListener('click', () => {
                 const current = card.getAttribute('data-pos');
@@ -411,12 +374,28 @@
             });
         });
 
+        // Swipe Detector
         let touchX = 0;
         container.addEventListener('touchstart', e => touchX = e.changedTouches[0].screenX, { passive: true });
         container.addEventListener('touchend', e => {
             const diffX = touchX - e.changedTouches[0].screenX;
             if (diffX > 50) shiftRight();       
             else if (diffX < -50) shiftLeft();  
+        }, { passive: true });
+
+        // FIX: Efek 3D Presisi untuk Mobile (Merespon sentuhan jari secara instan)
+        kartuProfil.addEventListener('touchstart', () => {
+            if (kartuProfil.getAttribute('data-pos') === 'center') {
+                kartuProfil.classList.add('is-tapped');
+            }
+        }, { passive: true });
+
+        kartuProfil.addEventListener('touchend', () => {
+            kartuProfil.classList.remove('is-tapped');
+        }, { passive: true });
+
+        kartuProfil.addEventListener('touchcancel', () => {
+            kartuProfil.classList.remove('is-tapped');
         }, { passive: true });
     </script>
 
