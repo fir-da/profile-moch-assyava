@@ -22,7 +22,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Menggunakan dvh agar benar-benar center secara vertikal di mobile browser */
             min-height: 100vh;
+            min-height: 100dvh; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; 
             background-color: #050507; 
@@ -53,7 +55,6 @@
             z-index: 0;
         }
 
-        /* Aurora 1: Pendaran Emas */
         .bg-aurora::before {
             background: rgba(201, 162, 85, 0.25); 
             top: -10%;
@@ -61,7 +62,6 @@
             animation: auroraSpin1 25s infinite linear; 
         }
 
-        /* Aurora 2: Pendaran Biru Eksekutif (Kecil/Lambat) */
         .bg-aurora::after {
             background: rgba(15, 40, 70, 0.25); 
             bottom: -10%;
@@ -101,7 +101,6 @@
             width: 280px;
             height: 440px;
             padding: 30px 24px;
-            /* Latar belakang solid gelap yang bersih, efek frosted glass Dihapus */
             background: #121214;
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
@@ -117,7 +116,6 @@
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
         }
 
-        /* Bingkai Emas Solid & Simpel */
         .card::before {
             content: '';
             position: absolute;
@@ -133,7 +131,7 @@
         }
 
         /* =========================================
-           4. POSISI KARTU
+           4. POSISI KARTU (DESKTOP)
            ========================================= */
         .card[data-pos="center"] {
             transform: translateX(0) scale(1) rotate(0deg); 
@@ -284,6 +282,49 @@
         #kartu-profil[data-pos="center"]:active .subtitle {
             transform: translateZ(25px);
         }
+
+        /* =========================================
+           8. RESPONSIVE MOBILE (PERBAIKAN TATA LETAK)
+           ========================================= */
+        @media (max-width: 480px) {
+            .carousel-container {
+                height: 440px; /* Sedikit dikecilkan agar proporsional di HP */
+            }
+
+            .card {
+                width: 260px; /* Kartu sedikit lebih ramping agar tidak memenuhi pinggir layar */
+                height: 420px;
+                padding: 25px 20px;
+            }
+
+            .profile-container {
+                width: 130px; 
+                height: 150px;
+                margin: 10px auto 15px auto;
+            }
+
+            .title {
+                font-size: 1.15rem;
+            }
+
+            .subtitle {
+                font-size: 0.8rem;
+            }
+
+            /* Merapatkan jarak geser kartu di HP agar tidak keluar layar & terpusat */
+            .card[data-pos="left"] {
+                transform: translateX(-70px) scale(0.85) rotate(-10deg); 
+            }
+
+            .card[data-pos="right"] {
+                transform: translateX(70px) scale(0.85) rotate(10deg); 
+            }
+
+            .btn-link {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -332,7 +373,7 @@
     </div>
 
     <!-- =========================================
-         SCRIPT INTERAKSI (KLIK & SWIPE SAJA)
+         SCRIPT INTERAKSI (KLIK & SWIPE)
          ========================================= -->
     <script>
         const cards = Array.from(document.querySelectorAll('.card'));
