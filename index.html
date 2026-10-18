@@ -22,7 +22,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Menggunakan dvh agar benar-benar center secara vertikal di mobile browser */
             min-height: 100vh;
             min-height: 100dvh; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -55,6 +54,7 @@
             z-index: 0;
         }
 
+        /* Aurora 1: Pendaran Emas (Tetap dipertahankan) */
         .bg-aurora::before {
             background: rgba(201, 162, 85, 0.25); 
             top: -10%;
@@ -62,6 +62,7 @@
             animation: auroraSpin1 25s infinite linear; 
         }
 
+        /* Aurora 2: Pendaran Biru Eksekutif (Desktop: Gelap & Halus) */
         .bg-aurora::after {
             background: rgba(15, 40, 70, 0.25); 
             bottom: -10%;
@@ -116,6 +117,7 @@
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
         }
 
+        /* Bingkai Emas Solid & Simpel */
         .card::before {
             content: '';
             position: absolute;
@@ -131,7 +133,7 @@
         }
 
         /* =========================================
-           4. POSISI KARTU (DESKTOP)
+           4. POSISI KARTU
            ========================================= */
         .card[data-pos="center"] {
             transform: translateX(0) scale(1) rotate(0deg); 
@@ -284,15 +286,15 @@
         }
 
         /* =========================================
-           8. RESPONSIVE MOBILE (PERBAIKAN TATA LETAK)
+           8. RESPONSIVE MOBILE
            ========================================= */
         @media (max-width: 480px) {
             .carousel-container {
-                height: 440px; /* Sedikit dikecilkan agar proporsional di HP */
+                height: 440px; 
             }
 
             .card {
-                width: 260px; /* Kartu sedikit lebih ramping agar tidak memenuhi pinggir layar */
+                width: 260px; 
                 height: 420px;
                 padding: 25px 20px;
             }
@@ -311,7 +313,6 @@
                 font-size: 0.8rem;
             }
 
-            /* Merapatkan jarak geser kartu di HP agar tidak keluar layar & terpusat */
             .card[data-pos="left"] {
                 transform: translateX(-70px) scale(0.85) rotate(-10deg); 
             }
@@ -324,17 +325,34 @@
                 padding: 10px;
                 font-size: 0.9rem;
             }
+
+            /* PENYESUAIAN AURORA KHUSUS MOBILE */
+            .bg-aurora::before, .bg-aurora::after {
+                width: 120vw; 
+                height: 60vh;
+                filter: blur(70px); 
+            }
+
+            .bg-aurora::before {
+                top: -5%;
+                left: -20%;
+            }
+
+            .bg-aurora::after {
+                /* Intensitas biru dinaikkan dan warna birunya sedikit lebih jelas (dari 0.25 ke 0.45) khusus di HP */
+                background: rgba(25, 60, 100, 0.45); 
+                bottom: 5%; 
+                right: -20%;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Wadah Latar Belakang Aurora -->
     <div class="bg-aurora"></div>
 
     <div class="carousel-container" id="cardCarousel">
         
-        <!-- KARTU 1: PERKENALAN -->
         <div class="card" id="kartu-profil" data-pos="center">
             
             <div class="profile-container">
@@ -347,7 +365,6 @@
             <p class="hint" style="margin-top: auto;">ketuk kartu di samping</p>
         </div>
 
-        <!-- KARTU 2: SOSIAL MEDIA -->
         <div class="card" data-pos="right">
             <h2 class="title" style="margin-top: 10px;">Mari berteman lebih dekat!</h2>
             <div class="links-container">
@@ -359,7 +376,6 @@
             <p class="hint">ketuk kartu di samping</p>
         </div>
 
-        <!-- KARTU 3: KONTAK -->
         <div class="card" data-pos="left">
             <h2 class="title" style="margin-top: 10px; font-size: 1.1rem;">Hubungi Saya</h2>
             <div class="links-container">
@@ -372,9 +388,6 @@
 
     </div>
 
-    <!-- =========================================
-         SCRIPT INTERAKSI (KLIK & SWIPE)
-         ========================================= -->
     <script>
         const cards = Array.from(document.querySelectorAll('.card'));
         const container = document.getElementById('cardCarousel');
