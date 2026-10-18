@@ -5,90 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link in Bio - Assyava</title>
     
-    <!-- Memanggil file CSS yang terpisah -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Tambahkan tautan CDN Font Awesome untuk icon yang lebih profesional -->
+    <!-- Font Awesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* CSS Tambahan untuk Icon agar lebih sedap dipandang */
+        /* =========================================
+           1. RESET & BASE STYLES
+           ========================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; 
+            background-color: #050507; 
+            position: relative;
+        }
+
+        /* =========================================
+           2. LATAR BELAKANG ELEGAN SLOW AURORA
+           ========================================= */
+        .bg-aurora {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0; 
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-aurora::before, .bg-aurora::after {
+            content: '';
+            position: absolute;
+            width: 60vw;
+            height: 60vh;
+            border-radius: 45% 55% 40% 60% / 55% 45% 60% 40%;
+            filter: blur(90px); 
+            z-index: 0;
+        }
+
+        /* Aurora 1: Pendaran Emas */
+        .bg-aurora::before {
+            background: rgba(201, 162, 85, 0.25); 
+            top: -10%;
+            left: -10%;
+            animation: auroraSpin1 25s infinite linear; 
+        }
+
+        /* Aurora 2: Pendaran Biru Eksekutif (Kecil/Lambat) */
+        .bg-aurora::after {
+            background: rgba(15, 40, 70, 0.25); 
+            bottom: -10%;
+            right: -10%;
+            animation: auroraSpin2 30s infinite linear reverse; 
+        }
+
+        @keyframes auroraSpin1 {
+            0% { transform: rotate(0deg) translate(5vw, 5vh) scale(1); }
+            50% { transform: rotate(180deg) translate(-5vw, -5vh) scale(1.2); }
+            100% { transform: rotate(360deg) translate(5vw, 5vh) scale(1); }
+        }
+
+        @keyframes auroraSpin2 {
+            0% { transform: rotate(0deg) translate(-5vw, 5vh) scale(1.1); }
+            50% { transform: rotate(180deg) translate(5vw, -5vh) scale(0.9); }
+            100% { transform: rotate(360deg) translate(-5vw, 5vh) scale(1.1); }
+        }
+
+        /* =========================================
+           3. CAROUSEL & CARD LAYOUT
+           ========================================= */
+        .carousel-container {
+            position: relative;
+            width: 100vw;
+            max-width: 500px;
+            height: 480px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px; 
+            z-index: 10; 
+        }
+
+        .card {
+            position: absolute;
+            width: 280px;
+            height: 440px;
+            padding: 30px 24px;
+            /* Latar belakang solid gelap yang bersih, efek frosted glass Dihapus */
+            background: #121214;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            user-select: none;
+            
+            transform-style: preserve-3d;
+            will-change: transform, box-shadow;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+        }
+
+        /* Bingkai Emas Solid & Simpel */
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(201, 162, 85, 0.3); 
+            border-radius: 10px;
+            pointer-events: none; 
+        }
+
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================================
+           4. POSISI KARTU
+           ========================================= */
+        .card[data-pos="center"] {
+            transform: translateX(0) scale(1) rotate(0deg); 
+            z-index: 3;
+            opacity: 1;
+            cursor: default;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.9),
+                        0 0 30px rgba(201, 162, 85, 0.08); 
+        }
+
+        .card[data-pos="left"] {
+            transform: translateX(-120px) scale(0.85) rotate(-12deg); 
+            z-index: 1;
+            opacity: 0.5; 
+            cursor: pointer;
+        }
+
+        .card[data-pos="right"] {
+            transform: translateX(120px) scale(0.85) rotate(12deg); 
+            z-index: 1;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        .card:not([data-pos="center"]) a {
+            pointer-events: none;
+        }
+
+        /* =========================================
+           5. WADAH FOTO PROFIL
+           ========================================= */
+        .profile-container {
+            position: relative;
+            width: 150px; 
+            height: 170px; 
+            margin: 15px auto 20px auto; 
+            transform-style: preserve-3d;
+        }
+
+        .profile-img {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: bottom;
+            
+            -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+            
+            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .title {
+            font-size: 1.25rem;
+            color: #c9a255; 
+            margin-bottom: 12px;
+            font-weight: 700;
+            transition: transform 0.4s ease;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #dfdfdf; 
+            line-height: 1.5;
+            transition: transform 0.4s ease;
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #888888;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           6. TOMBOL
+           ========================================= */
+        .links-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: auto 0;
+        }
+
+        .btn-link {
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px; 
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+
         .btn-link i {
-            margin-right: 8px; /* Atur spasi antara icon dan teks */
-            font-size: 1.1em; /* Sedikit lebih besar untuk penekanan */
-            vertical-align: middle; /* Pastikan rata secara vertikal dengan teks */
+            margin-right: 8px; 
+            font-size: 1.1em; 
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05); 
+            color: #c9a255;
+            border: 1px solid rgba(201, 162, 85, 0.5); 
+        }
+
+        .btn-outline:hover {
+            background: #c9a255;
+            color: #121212; 
+            transform: translateY(-2px); 
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e3b868, #c9a255); 
+            color: #121212; 
+            border: none;
+            margin-top: 5px;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #f3cf85, #d9b265); 
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* =========================================
+           7. EFEK 3D INTERAKTIF
+           ========================================= */
+        #kartu-profil[data-pos="center"]:hover,
+        #kartu-profil[data-pos="center"]:active {
+            transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8),
+                        0 0 25px rgba(201, 162, 85, 0.2);
+        }
+
+        #kartu-profil[data-pos="center"]:hover .profile-img,
+        #kartu-profil[data-pos="center"]:active .profile-img {
+            transform: translateZ(60px) scale(1.15) translateY(-10px);
+        }
+
+        #kartu-profil[data-pos="center"]:hover .title,
+        #kartu-profil[data-pos="center"]:active .title {
+            transform: translateZ(40px);
+        }
+
+        #kartu-profil[data-pos="center"]:hover .subtitle,
+        #kartu-profil[data-pos="center"]:active .subtitle {
+            transform: translateZ(25px);
         }
     </style>
 </head>
 <body>
 
+    <!-- Wadah Latar Belakang Aurora -->
+    <div class="bg-aurora"></div>
+
     <div class="carousel-container" id="cardCarousel">
         
-        <!-- KARTU 1: Perkenalan -->
-        <div class="card" data-pos="center">
-            <!-- Ganti 'foto-profil.jpg' dengan nama file foto wajah Anda -->
-            <img src="h.png" alt="Foto Profil" class="profile-img">
+        <!-- KARTU 1: PERKENALAN -->
+        <div class="card" id="kartu-profil" data-pos="center">
+            
+            <div class="profile-container">
+                <img src="h.png" alt="Foto Profil" class="profile-img">
+            </div>
+
             <h2 class="title">Halo, saya Assyava! 👋</h2>
-            <p class="subtitle">Lulusan Manajemen | Pecinta Saham | Pengulik Teknologi | pecinta  grafis</p>
-            <p class="subtitle">antusias belajar hal baru tiap harinya!</p>
-            <p class="hint">Geser atau ketuk kartu di samping</p>
+            <p class="subtitle">Management graduates | Tech Enthusiast | Stock Enthusiast | Graphic Design Lover</p>
+            <p class="subtitle" style="margin-top: 5px;">Antusias belajar hal baru tiap harinya!</p>
+            <p class="hint" style="margin-top: auto;">ketuk kartu di samping</p>
         </div>
 
-        <!-- KARTU 2: Sosmed & Web CV -->
+        <!-- KARTU 2: SOSIAL MEDIA -->
         <div class="card" data-pos="right">
             <h2 class="title" style="margin-top: 10px;">Mari berteman lebih dekat!</h2>
             <div class="links-container">
-
-                <!-- Ganti emoji dengan icon Font Awesome -->
-                <a href="https://www.instagram.com/moch_assyava/" class="btn-link btn-outline"><i class="fab fa-instagram"></i> Instagram</a>
-                <a href="https://web.facebook.com/moch.s.firdaus.56" class="btn-link btn-outline"><i class="fab fa-facebook"></i> Facebook</a>
-                <a href="https://www.tiktok.com/@moch_assyava?_r=1&_t=ZS-9AHAMn0eiLi" class="btn-link btn-outline"><i class="fab fa-tiktok"></i> TikTok</a>
-                <a href="https://fir-da.github.io/cv-moch-assyava-af/" class="btn-link btn-primary"><i class="fas fa-globe"></i> Kunjungi Web CV Saya</a>
+                <a href="https://www.instagram.com/moch_assyava/" class="btn-link btn-outline" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://web.facebook.com/moch.s.firdaus.56" class="btn-link btn-outline" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                <a href="https://www.tiktok.com/@moch_assyava?_r=1&_t=ZS-9AHAMn0eiLi" class="btn-link btn-outline" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
+                <a href="https://fir-da.github.io/cv-moch-assyava-af/" class="btn-link btn-primary" target="_blank"><i class="fas fa-globe"></i> Kunjungi Web CV Saya</a>
             </div>
-            <p class="hint">Geser atau ketuk kartu di samping</p>
+            <p class="hint">ketuk kartu di samping</p>
         </div>
 
-        <!-- KARTU 3: Kontak Langsung -->
+        <!-- KARTU 3: KONTAK -->
         <div class="card" data-pos="left">
-            <h2 class="title" style="margin-top: 10px; font-size: 1.1rem;">contact me for anything</h2>
+            <h2 class="title" style="margin-top: 10px; font-size: 1.1rem;">Hubungi Saya</h2>
             <div class="links-container">
-                
-                <!-- Ganti emoji dengan icon Font Awesome -->
-                <a href="https://wa.me/6289686903350" class="btn-link btn-outline"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="https://id.linkedin.com/in/mochammad-assyava-aulia-firdaus-08706b310I" class="btn-link btn-outline"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://wa.me/6289686903350" class="btn-link btn-outline" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="https://id.linkedin.com/in/mochammad-assyava-aulia-firdaus-08706b310I" class="btn-link btn-outline" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
                 <a href="mailto:mochassyava@gmail.com" class="btn-link btn-outline"><i class="fas fa-envelope"></i> Email</a>
             </div>
-            <p class="hint">Geser atau ketuk kartu di samping</p>
+            <p class="hint">ketuk kartu di samping</p>
         </div>
 
     </div>
 
-    <!-- JavaScript untuk interaksi klik dan geser -->
+    <!-- =========================================
+         SCRIPT INTERAKSI (KLIK & SWIPE SAJA)
+         ========================================= -->
     <script>
         const cards = Array.from(document.querySelectorAll('.card'));
-        let positions = ['center', 'right', 'left'];
+        const container = document.getElementById('cardCarousel');
+        let pos = ['center', 'right', 'left'];
 
-        function updateCards() {
-            cards.forEach((card, index) => {
-                card.setAttribute('data-pos', positions[index]);
-            });
-        }
+        const updateCards = () => cards.forEach((c, i) => c.setAttribute('data-pos', pos[i]));
+        const shiftRight = () => { pos.unshift(pos.pop()); updateCards(); }
+        const shiftLeft = () => { pos.push(pos.shift()); updateCards(); }
 
-        cards.forEach((card, index) => {
+        cards.forEach(card => {
             card.addEventListener('click', () => {
-                const currentPos = card.getAttribute('data-pos');
-                
-                if (currentPos === 'center') return;
-                
-                if (currentPos === 'right') {
-                    positions.unshift(positions.pop());
-                } else if (currentPos === 'left') {
-                    positions.push(positions.shift());
-                }
-                
-                updateCards();
+                const current = card.getAttribute('data-pos');
+                if (current === 'right') shiftRight();
+                else if (current === 'left') shiftLeft();
             });
         });
+
+        let touchX = 0;
+        container.addEventListener('touchstart', e => touchX = e.changedTouches[0].screenX, { passive: true });
+        container.addEventListener('touchend', e => {
+            const diffX = touchX - e.changedTouches[0].screenX;
+            if (diffX > 50) shiftRight();       
+            else if (diffX < -50) shiftLeft();  
+        }, { passive: true });
     </script>
 
 </body>
