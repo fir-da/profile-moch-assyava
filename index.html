@@ -54,7 +54,6 @@
             z-index: 0;
         }
 
-        /* Aurora 1: Pendaran Emas (Tetap dipertahankan) */
         .bg-aurora::before {
             background: rgba(201, 162, 85, 0.25); 
             top: -10%;
@@ -62,7 +61,6 @@
             animation: auroraSpin1 25s infinite linear; 
         }
 
-        /* Aurora 2: Pendaran Biru Eksekutif (Desktop: Gelap & Halus) */
         .bg-aurora::after {
             background: rgba(15, 40, 70, 0.25); 
             bottom: -10%;
@@ -117,7 +115,6 @@
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
         }
 
-        /* Bingkai Emas Solid & Simpel */
         .card::before {
             content: '';
             position: absolute;
@@ -261,26 +258,37 @@
         }
 
         /* =========================================
-           7. EFEK 3D INTERAKTIF
+           7. EFEK 3D INTERAKTIF (PERBAIKAN STICKY HOVER)
            ========================================= */
-        #kartu-profil[data-pos="center"]:hover,
-        #kartu-profil[data-pos="center"]:active {
-            transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8),
-                        0 0 25px rgba(201, 162, 85, 0.2);
+        
+        /* State 1: Hanya berlakukan :hover pada PC (Perangkat yang menggunakan mouse) */
+        @media (hover: hover) and (pointer: fine) {
+            #kartu-profil[data-pos="center"]:hover {
+                transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 25px rgba(201, 162, 85, 0.2);
+            }
+            #kartu-profil[data-pos="center"]:hover .profile-img {
+                transform: translateZ(60px) scale(1.15) translateY(-10px);
+            }
+            #kartu-profil[data-pos="center"]:hover .title {
+                transform: translateZ(40px);
+            }
+            #kartu-profil[data-pos="center"]:hover .subtitle {
+                transform: translateZ(25px);
+            }
         }
 
-        #kartu-profil[data-pos="center"]:hover .profile-img,
+        /* State 2: Berlaku untuk Klik di PC & Tap-Tahan (Active) di HP */
+        #kartu-profil[data-pos="center"]:active {
+            transform: translateX(0) scale(1) translateZ(-30px) rotateX(8deg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 25px rgba(201, 162, 85, 0.2);
+        }
         #kartu-profil[data-pos="center"]:active .profile-img {
             transform: translateZ(60px) scale(1.15) translateY(-10px);
         }
-
-        #kartu-profil[data-pos="center"]:hover .title,
         #kartu-profil[data-pos="center"]:active .title {
             transform: translateZ(40px);
         }
-
-        #kartu-profil[data-pos="center"]:hover .subtitle,
         #kartu-profil[data-pos="center"]:active .subtitle {
             transform: translateZ(25px);
         }
@@ -326,7 +334,6 @@
                 font-size: 0.9rem;
             }
 
-            /* PENYESUAIAN AURORA KHUSUS MOBILE */
             .bg-aurora::before, .bg-aurora::after {
                 width: 120vw; 
                 height: 60vh;
@@ -339,7 +346,6 @@
             }
 
             .bg-aurora::after {
-                /* Intensitas biru dinaikkan dan warna birunya sedikit lebih jelas (dari 0.25 ke 0.45) khusus di HP */
                 background: rgba(25, 60, 100, 0.45); 
                 bottom: 5%; 
                 right: -20%;
